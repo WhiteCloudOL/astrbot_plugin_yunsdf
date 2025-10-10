@@ -1,24 +1,75 @@
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
-from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
+from astrbot.api.star import Context, Star, register, StarTools
+from astrbot.api import logger, AstrBotConfig
+import astrbot.api.message_components as Comp
 
-@register("helloworld", "YourName", "一个简单的 Hello World 插件", "1.0.0")
+from .data_manager import DataManager
+
+@register("guncode", "清蒸云鸭", "三角洲改枪码插件，支持自定义添加，JSON持久化", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
+        # self.config = config # 插件配置
+        self.data_path = StarTools.get_data_dir("guncode") # 插件数据目录
+        self.bot_config = context.get_config() # 机器人配置
+        self.admin_list = self.bot_config.get("admins_id") # 机器人管理员列表
+        self.datamanager = DataManager() # 数据管理器实例
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
     
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("helloworld")
-    async def helloworld(self, event: AstrMessageEvent):
-        """这是一个 hello world 指令""" # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        user_name = event.get_sender_name()
-        message_str = event.message_str # 用户发的纯文本消息字符串
-        message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
-        logger.info(message_chain)
-        yield event.plain_result(f"Hello, {user_name}, 你发了 {message_str}!") # 发送一条纯文本消息
+    @filter.command("改枪码",alias=["guncode"])
+    async def guncode(self, event: AstrMessageEvent):
+        """获取改枪码"""
+        pass
+
+    @filter.command("改枪码管理")
+    async def guncode_manage(self, event: AstrMessageEvent, subcommand: str = None, arg1: str = None, arg2: str = None):
+        """管理改枪码"""
+        messages = []
+        if event.get_sender_id() not in self.admin_list:
+            if event.get_platform_name == "aiocqhttp":
+                messages.append(Comp.At(qq=event.get_sender_id()))
+            messages.append(Comp.Plain("❌你没有权限使用此命令！"))
+            yield event.chain_result(messages)
+            return
+        
+        if subcommand is None:
+            if event.get_platform_name == "aiocqhttp":
+                messages.append(Comp.At(qq=event.get_sender_id()))
+            messages.append(Comp.Plain("❌缺少参数！可用子命令：添加，删除，查看，清空"))
+            yield event.chain_result(messages)
+            return
+
+        match subcommand:
+            case "添加":
+                pass
+            case "删除":
+                pass
+            case "查看":
+                pass
+            case _:
+                if event.get_platform_name == "aiocqhttp":
+                    messages.append(Comp.At(qq=event.get_sender_id()))
+                messages.append(Comp.Plain("❌无效的子命令！可用子命令：添加，删除，查看，清空"))
+                yield event.chain_result(messages)
+                return
+        
+
+        pass
+
+    @filter.command("改枪码帮助")
+    async def guncode_help(self, event: AstrMessageEvent):
+        """改枪码帮助"""
+        help_text = (
+            "改枪码插件使用帮助：\n"
+            "1. 获取改枪码：'/改枪码' 或 '/guncode'\n"
+            "2. 管理改枪码：'/改枪码管理'\n"
+            "3. 查看帮助：'/改枪码帮助'"
+        )
+        await event.plain_result(help_text)
+        return MessageEventResult(True)
+        
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
