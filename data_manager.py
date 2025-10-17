@@ -8,44 +8,6 @@ class DataManager:
     """
     数据管理器类，负责改枪码的存储与管理
     使用 JSON 文件进行持久化存储
-
-    Data Structure:
-    {
-        "guns": {
-            "AK47": {
-                "name": "AK47",
-                "firezone": {
-                    "1": {
-                        "price": 150000,
-                        "code": "AK47_FZ_001",
-                        "description": "基础火力升级"
-                    },
-                    "2": {
-                        "price": 200000,
-                        "code": "AK47_FZ_002", 
-                        "description": "高级火力升级"
-                    }
-                },
-                "battlefield": {
-                    "1": {
-                        "code": "AK47_BF_001",
-                        "description": "战场适应性提升"
-                    }
-                }
-            },
-            "M4A1": {
-                "name": "M4A1",
-                "firezone": {
-                    "1": {
-                        "price": 120000,
-                        "code": "M4A1_FZ_001",
-                        "description": "精准射击升级"
-                    }
-                },
-                "battlefield": {}
-            }
-        }
-    }
     """
 
     def __init__(self, data_file: Union[str, Path] = StarTools.get_data_dir("yunsdf")/"gun_data.json"):

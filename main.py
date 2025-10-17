@@ -33,7 +33,7 @@ class MyPlugin(Star):
 
     async def initialize(self):
         """插件初始化"""
-        logger.info("改枪码插件初始化完成")
+        logger.info("Yuns三角洲插件初始化完成")
 
     @filter.command("改枪码", alias=["guncode"])
     async def guncode(self, event: AstrMessageEvent, gun_name: str = None):
