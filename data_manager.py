@@ -48,7 +48,7 @@ class DataManager:
     }
     """
 
-    def __init__(self, data_file: str = "gun_data.json"):
+    def __init__(self, data_file: str = StarTools.get_data_dir("yunsdf")/"gun_data.json"):
         """
         初始化数据管理器
         

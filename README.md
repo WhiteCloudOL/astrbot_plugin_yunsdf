@@ -10,6 +10,11 @@ AstrBot Plugin for DeltaForce Guncode
 
 ### 自动安装  
 Astrbot插件市场搜索 mcstatus 即可自动下载  
+此外，需要确保安装playwright
+默认情况下pip会自动下载playwright包，但是需要手动安装，请进入python虚拟环境，输入以下命令：  
+```bash
+    playwright install
+```
 
 ### 手动安装  
 1. 方式一：直接下载：  
@@ -29,6 +34,12 @@ git clone https://gh-proxy.com/https://github.com/WhiteCloudOL/astrbot_plugin_gu
 git clone https://cdn.gh-proxy.com/https://github.com/WhiteCloudOL/astrbot_plugin_guncode.git  
 ```
 以上命令任选其一执行即可  
+
+*下载完成后*  
+默认情况下pip会自动下载playwright包，但是需要手动安装，请进入python虚拟环境，输入以下命令：  
+```bash
+    playwright install
+```
 
 # 支持
 
