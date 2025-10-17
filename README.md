@@ -3,8 +3,11 @@
 AstrBot Plugin for DeltaForce
 
 # 功能/Function  
-1. 默认自带改枪码  
-2. 支持自定义添加改枪码  
+1. 自定义改枪码查询、管理  
+   关于改枪码，默认仅含部分数据，如有想法 可加Q群[梦境之地-780676145](https://qm.qq.com/q/i7oaee3JJu) 或 [水友群-637174573](https://qm.qq.com/q/QIzE6Nlf2s)，我也可以提供一些数据~  
+2. 三角洲每日密码查询  
+   特别鸣谢：[ACGICE三角洲小涛查](https://www.acgice.com/)  
+3. 更多的坑等待填充...  
 
 # 安装/Install  
 
@@ -71,6 +74,5 @@ python3 -m playwright install-deps  # linux
    从Astrbot本体配置机器人管理员 或 插件配置-管理员列表 均可添加管理员，本插件支持混合机器人管理员和插件管理员数据~
 
 # 支持、鸣谢
-1. Astrbot - 多平台大模型机器人基础设施  
-[Astrbot帮助文档](https://astrbot.app)  
-2. ACGICE[三角洲小涛查](https://www.acgice.com/) - 部分数据来源  
+1. [Astrbot](https://astrbot.app) - 多平台大模型机器人基础设施  
+2. [ACGICE三角洲小涛查](https://www.acgice.com/) - 部分数据来源  
