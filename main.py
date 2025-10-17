@@ -574,7 +574,7 @@ class MyPlugin(Star):
         
         yield event.plain_result(result)
 
-    @filter.command("改枪码帮助")
+    @filter.command("三角洲帮助")
     async def guncode_help(self, event: AstrMessageEvent):
         """改枪码帮助"""
         help_text = (
