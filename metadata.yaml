@@ -1,5 +1,5 @@
 name: yunsdf
-desc: 三角洲改枪码、每日密码、交易行查询插件，支持自定义添加，JSON持久化
+desc: 三角洲改枪码、每日密码等查询插件，支持自定义添加，JSON持久化
 version: v1.1.0
 author: 清蒸云鸭
 repo: https://github.com/WhiteCloudOL/astrbot_plugin_yunsdf

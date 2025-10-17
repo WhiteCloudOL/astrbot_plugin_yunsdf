@@ -10,7 +10,7 @@ import time
 
 from .data_manager import DataManager
 
-@register("yunsdf", "清蒸云鸭", "三角洲改枪码、每日密码、交易行查询插件，支持自定义添加，JSON持久化", "1.0.0")
+@register("yunsdf", "清蒸云鸭", "三角洲改枪码、每日密码等查询插件，支持自定义添加，JSON持久化", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context,config: AstrBotConfig):
         super().__init__(context)
@@ -128,7 +128,7 @@ class MyPlugin(Star):
             yield event.chain_result(messages)
             return
         
-        result = f"欢迎使用Yun's GunCode~\n🔫 枪械: {gun_name}\n\n"
+        result = f"欢迎使用Yun's三角洲插件~\n🔫 枪械: {gun_name}\n\n"
         
         firezone_codes = self.datamanager.get_gun_codes(gun_name, "firezone", sort_by_price=True)
         if firezone_codes:
@@ -548,7 +548,7 @@ class MyPlugin(Star):
             yield event.plain_result("❌暂无枪械数据")
             return
         
-        result = "🔫 所有枪械列表:\n"
+        result = "欢迎使用Yun's三角洲插件\n 🔫 所有枪械列表:\n|序号|名称|烽火地带|全面战场\n"
         for i, gun_name in enumerate(guns, 1):
             gun_data = self.datamanager.get_gun(gun_name)
             firezone_count = len(gun_data.get("firezone", {}))
