@@ -194,7 +194,9 @@
             "firezone": {},
             "battlefield": {}
         },
-        "SR-3M紧凑突击步枪": {},
+        "SR-3M紧凑突击步枪": {
+            "name": "P90冲锋枪",
+            "firezone": {},
             "battlefield": {}
         },
         "复合弓": {
@@ -250,16 +252,6 @@
                     "price": 160000,
                     "code": "6HK13A4078SUP7VFULF7D",
                     "description": "16万丐版"
-                },
-                "2": {
-                    "price": 420000,
-                    "code": "6HK13H0078SUP7VFULF7D",
-                    "description": "42万半改"
-                },
-                "3": {
-                    "price": 820000,
-                    "code": "6HK1494078SUP7VFULF7D",
-                    "description": "82万满改"
                 }
             },
             "battlefield": {}
@@ -316,18 +308,7 @@
         },
         "M700狙击步枪": {
             "name": "M700狙击步枪",
-            "firezone": {
-                "1": {
-                    "price": 190000,
-                    "code": "6HK1J9C078SUP7VFULF7D",
-                    "description": "19万丐版"
-                },
-                "2": {
-                    "price": 420000,
-                    "code": "6HK1JN0078SUP7VFULF7D",
-                    "description": "42万版"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "725双管霰弹枪": {
