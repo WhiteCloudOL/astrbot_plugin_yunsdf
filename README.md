@@ -41,6 +41,14 @@ git clone https://cdn.gh-proxy.com/https://github.com/WhiteCloudOL/astrbot_plugi
     playwright install
 ```
 
+**Playwright安装失败**  
+1. 缺少依赖`Playwright Host validation warning`，请在虚拟环境下执行命令，下载依赖包：  
+```bash
+python -m playwright install-deps   # windows
+
+python3 -m playwright install-deps  # linux
+```
+
 # 支持
 
 [Astrbot帮助文档](https://astrbot.app)  
