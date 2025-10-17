@@ -2,75 +2,17 @@
     "guns": {
         "AUG突击步枪": {
             "name": "AUG突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 200000,
-                    "code": "6HJUB8C078SUP7VFULF7D",
-                    "description": "20万版"
-                },
-                "2": {
-                    "price": 300000,
-                    "code": "6HJUBOO078SUP7VFULF7D",
-                    "description": "30万半改"
-                },
-                "3": {
-                    "price": 440000,
-                    "code": "6HJUBS0078SUP7VFULF7D",
-                    "description": "44万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "AKM突击步枪": {
             "name": "AKM突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 0,
-                    "code": "6HJBP8K078SUP7VFULF7D",
-                    "description": "金枪客 AKM"
-                },
-                "2": {
-                    "price": 180000,
-                    "code": "6HJUD80078SUP7VFULF7D",
-                    "description": "18万丐版"
-                },
-                "3": {
-                    "price": 300000,
-                    "code": "6HJUE3G078SUP7VFULF7D",
-                    "description": "30万半改"
-                },
-                "4": {
-                    "price": 490000,
-                    "code": "6HJUEJ8078SUP7VFULF7D",
-                    "description": "49万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "KC17突击步枪": {
             "name": "KC17突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 17,
-                    "code": "6HJBOVS078SUP7VFULF7D",
-                    "description": "金枪客 KC17"
-                },
-                "2": {
-                    "price": 200000,
-                    "code": "6HJUFEC078SUP7VFULF7D",
-                    "description": "20万丐版"
-                },
-                "3": {
-                    "price": 310000,
-                    "code": "6HJUGM4078SUP7VFULF7D",
-                    "description": "31万半改"
-                },
-                "4": {
-                    "price": 440000,
-                    "code": "6HJUHE8078SUP7VFULF7D",
-                    "description": "44万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "CAR-15突击步枪": {
@@ -91,16 +33,6 @@
                     "price": 80000,
                     "code": "6HJULLC078SUP7VFULF7D",
                     "description": "8万丐版"
-                },
-                "2": {
-                    "price": 120000,
-                    "code": "6HJULNS078SUP7VFULF7D",
-                    "description": "12万半改"
-                },
-                "3": {
-                    "price": 290000,
-                    "code": "6HJULQG078SUP7VFULF7D",
-                    "description": "29万满改"
                 }
             },
             "battlefield": {}
@@ -112,16 +44,6 @@
                     "price": 110000,
                     "code": "6HJULVC078SUP7VFULF7D",
                     "description": "11万丐版"
-                },
-                "2": {
-                    "price": 230000,
-                    "code": "6HJUM20078SUP7VFULF7D",
-                    "description": "23万半改"
-                },
-                "3": {
-                    "price": 380000,
-                    "code": "6HJUM4S078SUP7VFULF7D",
-                    "description": "38万满改"
                 }
             },
             "battlefield": {}
@@ -133,16 +55,6 @@
                     "price": 150000,
                     "code": "6HJUMCO078SUP7VFULF7D",
                     "description": "15万满腰射"
-                },
-                "2": {
-                    "price": 240000,
-                    "code": "6HJUML4078SUP7VFULF7D",
-                    "description": "24万半改"
-                },
-                "3": {
-                    "price": 290000,
-                    "code": "6HJUMGC078SUP7VFULF7D",
-                    "description": "29万满改"
                 }
             },
             "battlefield": {}
@@ -151,16 +63,6 @@
             "name": "M16A4突击步枪",
             "firezone": {
                 "1": {
-                    "price": 70000,
-                    "code": "6HJUMSS078SUP7VFULF7D",
-                    "description": "7万丐版"
-                },
-                "2": {
-                    "price": 160000,
-                    "code": "6HJUMUK078SUP7VFULF7D",
-                    "description": "16万半改"
-                },
-                "3": {
                     "price": 330000,
                     "code": "6HJUN0K078SUP7VFULF7D",
                     "description": "33万满改连狙版"
@@ -175,170 +77,43 @@
                     "price": 270000,
                     "code": "6HJUOFO078SUP7VFULF7D",
                     "description": "27万丐版"
-                },
-                "2": {
-                    "price": 340000,
-                    "code": "6HJUOFO078SUP7VFULF7D",
-                    "description": "34万半改"
-                },
-                "3": {
-                    "price": 570000,
-                    "code": "6HJUP0K078SUP7VFULF7D",
-                    "description": "57万满改"
                 }
             },
             "battlefield": {}
         },
         "ASh-12战斗步枪": {
             "name": "ASh-12战斗步枪",
-            "firezone": {
-                "1": {
-                    "price": 160000,
-                    "code": "6HJUPJG078SUP7VFULF7D",
-                    "description": "16万丐版"
-                },
-                "2": {
-                    "price": 330000,
-                    "code": "6HJUPVC078SUP7VFULF7D",
-                    "description": "33万半改"
-                },
-                "3": {
-                    "price": 550000,
-                    "code": "6HJUQ30078SUP7VFULF7D",
-                    "description": "55万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "AKS-74U突击步枪": {
             "name": "AKS-74U突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 80000,
-                    "code": "6HKA8G8078SUP7VFULF7D",
-                    "description": "8万丐版"
-                },
-                "2": {
-                    "price": 160000,
-                    "code": "6HKA8I0078SUP7VFULF7D",
-                    "description": "16万半改"
-                },
-                "3": {
-                    "price": 440000,
-                    "code": "6HKA8JK078SUP7VFULF7D",
-                    "description": "44万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "QBZ95-1突击步枪": {
             "name": "QBZ95-1突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 120000,
-                    "code": "6HMMFVK078SUP7VFULF7D",
-                    "description": "12万版"
-                },
-                "2": {
-                    "price": 160000,
-                    "code": "6HMMG5C078SUP7VFULF7D",
-                    "description": "16万半改"
-                },
-                "3": {
-                    "price": 300000,
-                    "code": "6HMMG88078SUP7VFULF7D",
-                    "description": "30万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M4A1突击步枪": {
             "name": "M4A1突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HJURC0078SUP7VFULF7D",
-                    "description": "15万"
-                },
-                "2": {
-                    "price": 270000,
-                    "code": "6HJURG0078SUP7VFULF7D",
-                    "description": "27万半改"
-                },
-                "3": {
-                    "price": 470000,
-                    "code": "6HJURJC078SUP7VFULF7D",
-                    "description": "47万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "MK47突击步枪": {
             "name": "MK47突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 260000,
-                    "code": "6HNJCB4078SUP7VFULF7D",
-                    "description": "26万丐版"
-                },
-                "2": {
-                    "price": 460000,
-                    "code": "6HNJD7S078SUP7VFULF7D",
-                    "description": "46万"
-                },
-                "3": {
-                    "price": 520000,
-                    "code": "6HK1U78078SUP7VFULF7D",
-                    "description": "52万"
-                },
-                "4": {
-                    "price": 560000,
-                    "code": "6HK1UJS078SUP7VFULF7D",
-                    "description": "56万"
-                },
-                "5": {
-                    "price": 600000,
-                    "code": "6HNJDRS078SUP7VFULF7D",
-                    "description": "满改60万"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "AK-12突击步枪": {
             "name": "AK-12突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HJUT7K078SUP7VFULF7D",
-                    "description": "15万版"
-                },
-                "2": {
-                    "price": 290000,
-                    "code": "6HJUTDK078SUP7VFULF7D",
-                    "description": "29万半改"
-                },
-                "3": {
-                    "price": 510000,
-                    "code": "6HJUTJO078SUP7VFULF7D",
-                    "description": "51万满改93后座"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M7战斗步枪": {
             "name": "M7战斗步枪",
-            "firezone": {
-                "1": {
-                    "price": 610000,
-                    "code": "6HLVP980FG6PIG31HEEA8",
-                    "description": "61万林树同款"
-                },
-                "2": {
-                    "price": 630000,
-                    "code": "6HLVOL80FG6PIG31HEEA8",
-                    "description": "63万版"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SCAR-H战斗步枪": {
@@ -348,16 +123,6 @@
                     "price": 250000,
                     "code": "6HJUUI4078SUP7VFULF7D",
                     "description": "25万版"
-                },
-                "2": {
-                    "price": 380000,
-                    "code": "6HJUUP4078SUP7VFULF7D",
-                    "description": "38万版"
-                },
-                "3": {
-                    "price": 500000,
-                    "code": "6HJUV5K078SUP7VFULF7D",
-                    "description": "50万满改80后座"
                 }
             },
             "battlefield": {}
@@ -369,16 +134,6 @@
                     "price": 230000,
                     "code": "6HJV0CC078SUP7VFULF7D",
                     "description": "23万版"
-                },
-                "2": {
-                    "price": 390000,
-                    "code": "6HJV0R8078SUP7VFULF7D",
-                    "description": "39万版"
-                },
-                "3": {
-                    "price": 450000,
-                    "code": "6HJV100078SUP7VFULF7D",
-                    "description": "45万满改"
                 }
             },
             "battlefield": {}
@@ -390,322 +145,76 @@
                     "price": 240000,
                     "code": "6HJV26S078SUP7VFULF7D",
                     "description": "24万版"
-                },
-                "2": {
-                    "price": 320000,
-                    "code": "6HJV1S0078SUP7VFULF7D",
-                    "description": "32万版"
-                },
-                "3": {
-                    "price": 460000,
-                    "code": "6HJV1FS078SUP7VFULF7D",
-                    "description": "46万红点版"
-                },
-                "4": {
-                    "price": 490000,
-                    "code": "6HJV1B4078SUP7VFULF7D",
-                    "description": "49万棱角二倍加侧瞄版"
                 }
             },
             "battlefield": {}
         },
         "Vector冲锋枪": {
             "name": "Vector冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 180000,
-                    "code": "6HJV6KC078SUP7VFULF7D",
-                    "description": "18万丐版"
-                },
-                "2": {
-                    "price": 250000,
-                    "code": "6HJV6P0078SUP7VFULF7D",
-                    "description": "25万可腰射可开镜版"
-                },
-                "3": {
-                    "price": 470000,
-                    "code": "6HJV6U4078SUP7VFULF7D",
-                    "description": "47万满改办"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "QCQ171冲锋枪": {
             "name": "QCQ171冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 100000,
-                    "code": "6HK0G1O078SUP7VFULF7D",
-                    "description": "10万丐版"
-                },
-                "2": {
-                    "price": 170000,
-                    "code": "6HK0G8S078SUP7VFULF7D",
-                    "description": "17万版"
-                },
-                "3": {
-                    "price": 420000,
-                    "code": "6HK0GDO078SUP7VFULF7D",
-                    "description": "42万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "MP7冲锋枪": {
             "name": "MP7冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 210000,
-                    "code": "6HK0GOG078SUP7VFULF7D",
-                    "description": "21万满腰射版"
-                },
-                "2": {
-                    "price": 310000,
-                    "code": "6HK0GT0078SUP7VFULF7D",
-                    "description": "31万可腰射可开镜"
-                },
-                "3": {
-                    "price": 510000,
-                    "code": "6HK0H1G078SUP7VFULF7D",
-                    "description": "51万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "勇士冲锋枪": {
             "name": "勇士冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 80000,
-                    "code": "6HK0HIK078SUP7VFULF7D",
-                    "description": "8万丐版"
-                },
-                "2": {
-                    "price": 220000,
-                    "code": "6HK0HR0078SUP7VFULF7D",
-                    "description": "22万满腰射"
-                },
-                "3": {
-                    "price": 280000,
-                    "code": "6HK0I2S078SUP7VFULF7D",
-                    "description": "28万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "MP5冲锋枪": {
             "name": "MP5冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 90000,
-                    "code": "6HJV6BS078SUP7VFULF7D",
-                    "description": "9万满腰射"
-                },
-                "2": {
-                    "price": 220000,
-                    "code": "6HK0J4K078SUP7VFULF7D",
-                    "description": "22万半改"
-                },
-                "3": {
-                    "price": 320000,
-                    "code": "6HK0JBO078SUP7VFULF7D",
-                    "description": "32万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SMG-45冲锋枪": {
             "name": "SMG-45冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 80000,
-                    "code": "6HK0JT8078SUP7VFULF7D",
-                    "description": "8万丐版"
-                },
-                "2": {
-                    "price": 170000,
-                    "code": "6HK0K4O078SUP7VFULF7D",
-                    "description": "17万腰射版"
-                },
-                "3": {
-                    "price": 390000,
-                    "code": "6HK0KUK078SUP7VFULF7D",
-                    "description": "39万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "野牛冲锋枪": {
             "name": "野牛冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 80000,
-                    "code": "6HK0LT4078SUP7VFULF7D",
-                    "description": "8万版"
-                },
-                "2": {
-                    "price": 150000,
-                    "code": "6HK0MIG078SUP7VFULF7D",
-                    "description": "15万版"
-                },
-                "3": {
-                    "price": 380000,
-                    "code": "6HK0MP0078SUP7VFULF7D",
-                    "description": "38万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "UZI冲锋枪": {
             "name": "UZI冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 90000,
-                    "code": "6HK0N8O078SUP7VFULF7D",
-                    "description": "9万"
-                },
-                "2": {
-                    "price": 170000,
-                    "code": "6HK0NOK078SUP7VFULF7D",
-                    "description": "17万"
-                },
-                "3": {
-                    "price": 270000,
-                    "code": "6HK0O80078SUP7VFULF7D",
-                    "description": "27万满改爆闪腰射开镜兼顾"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "P90冲锋枪": {
             "name": "P90冲锋枪",
-            "firezone": {
-                "1": {
-                    "price": 110000,
-                    "code": "6HK0OJ8078SUP7VFULF7D",
-                    "description": "11万丐版"
-                },
-                "2": {
-                    "price": 240000,
-                    "code": "6HK0OS4078SUP7VFULF7D",
-                    "description": "24万半改"
-                },
-                "3": {
-                    "price": 460000,
-                    "code": "6HK0PA0078SUP7VFULF7D",
-                    "description": "46万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
-        "SR-3M紧凑突击步枪": {
-            "name": "SR-3M紧凑突击步枪",
-            "firezone": {
-                "1": {
-                    "price": 180000,
-                    "code": "6HK0Q1G078SUP7VFULF7D",
-                    "description": "18万丐版92腰射"
-                },
-                "2": {
-                    "price": 250000,
-                    "code": "6HK0QGC078SUP7VFULF7D",
-                    "description": "25万半改"
-                },
-                "3": {
-                    "price": 340000,
-                    "code": "6HK0QU4078SUP7VFULF7D",
-                    "description": "34万满腰射开镜"
-                },
-                "4": {
-                    "price": 440000,
-                    "code": "6HK0ROK078SUP7VFULF7D",
-                    "description": "44万满改满腰射开镜"
-                }
-            },
+        "SR-3M紧凑突击步枪": {},
             "battlefield": {}
         },
         "复合弓": {
             "name": "复合弓",
-            "firezone": {
-                "1": {
-                    "price": 110000,
-                    "code": "6HC5U0G078SUP7VFULF7D",
-                    "description": "11万丐版"
-                },
-                "2": {
-                    "price": 200000,
-                    "code": "6HC5UD4078SUP7VFULF7D",
-                    "description": "20万"
-                },
-                "3": {
-                    "price": 300000,
-                    "code": "6HC5UH8078SUP7VFULF7D",
-                    "description": "30万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "QJB201轻机枪": {
             "name": "QJB201轻机枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HK0S4S078SUP7VFULF7D",
-                    "description": "15万丐版"
-                },
-                "2": {
-                    "price": 360000,
-                    "code": "6HK0T20078SUP7VFULF7D",
-                    "description": "36万半改"
-                },
-                "3": {
-                    "price": 500000,
-                    "code": "6HK0TAG078SUP7VFULF7D",
-                    "description": "40万100满后坐力"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M250通用机枪": {
             "name": "M250通用机枪",
-            "firezone": {
-                "1": {
-                    "price": 230000,
-                    "code": "6HK0U7C078SUP7VFULF7D",
-                    "description": "23万丐版"
-                },
-                "2": {
-                    "price": 340000,
-                    "code": "6HK0V14078SUP7VFULF7D",
-                    "description": "34万半改"
-                },
-                "3": {
-                    "price": 570000,
-                    "code": "6HK0VRS078SUP7VFULF7D",
-                    "description": "57万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M249轻机枪": {
             "name": "M249轻机枪",
-            "firezone": {
-                "1": {
-                    "price": 160000,
-                    "code": "6HK1100078SUP7VFULF7D",
-                    "description": "16万丐版"
-                },
-                "2": {
-                    "price": 290000,
-                    "code": "6HK11JC078SUP7VFULF7D",
-                    "description": "29万半改"
-                },
-                "3": {
-                    "price": 390000,
-                    "code": "6HK125G078SUP7VFULF7D",
-                    "description": "39万满改85后座"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "PKM通用机枪": {
@@ -757,202 +266,52 @@
         },
         "SVD狙击步枪": {
             "name": "SVD狙击步枪",
-            "firezone": {
-                "1": {
-                    "price": 160000,
-                    "code": "6HK158K078SUP7VFULF7D",
-                    "description": "16万丐版"
-                },
-                "2": {
-                    "price": 300000,
-                    "code": "6HK15VG078SUP7VFULF7D",
-                    "description": "30万半改"
-                },
-                "3": {
-                    "price": 530000,
-                    "code": "6HK16R4078SUP7VFULF7D",
-                    "description": "53万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "VSS射手步枪": {
             "name": "VSS射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 53000,
-                    "code": "6HK17QG078SUP7VFULF7D",
-                    "description": "5万3丐版"
-                },
-                "2": {
-                    "price": 230000,
-                    "code": "6HK17JS078SUP7VFULF7D",
-                    "description": "23万半改"
-                },
-                "3": {
-                    "price": 460000,
-                    "code": "6HK181C078SUP7VFULF7D",
-                    "description": "46万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "Mini-14射手步枪": {
             "name": "Mini-14射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 100000,
-                    "code": "6HK18NC078SUP7VFULF7D",
-                    "description": "10万丐版"
-                },
-                "2": {
-                    "price": 220000,
-                    "code": "6HK191S078SUP7VFULF7D",
-                    "description": "22万半改"
-                },
-                "3": {
-                    "price": 350000,
-                    "code": "6HK19H8078SUP7VFULF7D",
-                    "description": "35万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SKS射手步枪": {
             "name": "SKS射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HK1A4C078SUP7VFULF7D",
-                    "description": "15万丐版"
-                },
-                "2": {
-                    "price": 320000,
-                    "code": "6HK1AMK078SUP7VFULF7D",
-                    "description": "32万半改"
-                },
-                "3": {
-                    "price": 520000,
-                    "code": "6HK1BEC078SUP7VFULF7D",
-                    "description": "52万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SR-25射手步枪": {
             "name": "SR-25射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 260000,
-                    "code": "6HK1C5O078SUP7VFULF7D",
-                    "description": "26万版"
-                },
-                "2": {
-                    "price": 320000,
-                    "code": "6HK1CI0078SUP7VFULF7D",
-                    "description": "32万版"
-                },
-                "3": {
-                    "price": 650000,
-                    "code": "6HK1D6G078SUP7VFULF7D",
-                    "description": "65万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SR9射手步枪": {
             "name": "SR9射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 180000,
-                    "code": "6HCHKSK078SUP7VFULF7D",
-                    "description": "18万版"
-                },
-                "2": {
-                    "price": 250000,
-                    "code": "6HK1ESS078SUP7VFULF7D",
-                    "description": "25万半改"
-                },
-                "3": {
-                    "price": 440000,
-                    "code": "6HK1FB4078SUP7VFULF7D",
-                    "description": "44万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "PSG-1射手步枪": {
             "name": "PSG-1射手步枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HK1FQ0078SUP7VFULF7D",
-                    "description": "15万丐版"
-                },
-                "2": {
-                    "price": 390000,
-                    "code": "6HK1G1S078SUP7VFULF7D",
-                    "description": "39万半改"
-                },
-                "3": {
-                    "price": 590000,
-                    "code": "6HK1GQS078SUP7VFULF7D",
-                    "description": "59万满改100后座轮椅枪"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "AWM狙击步枪": {
             "name": "AWM狙击步枪",
-            "firezone": {
-                "1": {
-                    "price": 790000,
-                    "code": "6HK1H8K078SUP7VFULF7D",
-                    "description": "79万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "R93狙击步枪": {
             "name": "R93狙击步枪",
-            "firezone": {
-                "1": {
-                    "price": 100000,
-                    "code": "6HK1HH8078SUP7VFULF7D",
-                    "description": "10万丐版"
-                },
-                "2": {
-                    "price": 200000,
-                    "code": "6HK1HTC078SUP7VFULF7D",
-                    "description": "20万半改"
-                },
-                "3": {
-                    "price": 280000,
-                    "code": "6HK1I18078SUP7VFULF7D",
-                    "description": "28万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "SV-98狙击步枪": {
             "name": "SV-98狙击步枪",
-            "firezone": {
-                "1": {
-                    "price": 140000,
-                    "code": "6HK1IFC078SUP7VFULF7D",
-                    "description": "14万丐版"
-                },
-                "2": {
-                    "price": 230000,
-                    "code": "6HK1IL8078SUP7VFULF7D",
-                    "description": "23万半改"
-                },
-                "3": {
-                    "price": 350000,
-                    "code": "6HK1ISG078SUP7VFULF7D",
-                    "description": "35万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M700狙击步枪": {
@@ -967,72 +326,28 @@
                     "price": 420000,
                     "code": "6HK1JN0078SUP7VFULF7D",
                     "description": "42万版"
-                },
-                "3": {
-                    "price": 590000,
-                    "code": "6HK1JV0078SUP7VFULF7D",
-                    "description": "59万版满改"
                 }
             },
             "battlefield": {}
         },
         "725双管霰弹枪": {
             "name": "725双管霰弹枪",
-            "firezone": {
-                "1": {
-                    "price": 150000,
-                    "code": "6HK1PHC078SUP7VFULF7D",
-                    "description": "15万"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M870霰弹枪": {
             "name": "M870霰弹枪",
-            "firezone": {
-                "1": {
-                    "price": 100000,
-                    "code": "6HK1PT4078SUP7VFULF7D",
-                    "description": "10万改3倍大狙"
-                },
-                "2": {
-                    "price": 160000,
-                    "code": "6HK1Q5C078SUP7VFULF7D",
-                    "description": "16万火控版"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "S12K霰弹枪": {
             "name": "S12K霰弹枪",
-            "firezone": {
-                "1": {
-                    "price": 130000,
-                    "code": "6HK1QEK078SUP7VFULF7D",
-                    "description": "13万满腰射"
-                },
-                "2": {
-                    "price": 230000,
-                    "code": "6HK1R3S078SUP7VFULF7D",
-                    "description": "23万"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         },
         "M1014霰弹枪": {
             "name": "M1014霰弹枪",
-            "firezone": {
-                "1": {
-                    "price": 100000,
-                    "code": "6HK1RL0078SUP7VFULF7D",
-                    "description": "10万半改"
-                },
-                "2": {
-                    "price": 260000,
-                    "code": "6HK1S50078SUP7VFULF7D",
-                    "description": "26万满改"
-                }
-            },
+            "firezone": {},
             "battlefield": {}
         }
     }
