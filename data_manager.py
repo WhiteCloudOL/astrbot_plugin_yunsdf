@@ -1,7 +1,7 @@
 from astrbot.api.star import StarTools
 from astrbot.api import logger
 import json
-import os
+from pathlib import Path
 from typing import Dict, List, Optional, Union, Tuple
 
 class DataManager:
@@ -48,14 +48,14 @@ class DataManager:
     }
     """
 
-    def __init__(self, data_file: str = StarTools.get_data_dir("yunsdf")/"gun_data.json"):
+    def __init__(self, data_file: Union[str, Path] = StarTools.get_data_dir("yunsdf")/"gun_data.json"):
         """
         初始化数据管理器
         
         Args:
             data_file: 数据文件路径
         """
-        self.data_file = data_file
+        self.data_file = Path(data_file)
         self.data = self._load_data()
         self._ensure_data_structure()
     
@@ -72,9 +72,9 @@ class DataManager:
         Returns:
             加载的数据字典
         """
-        if os.path.exists(self.data_file):
+        if self.data_file.exists():
             try:
-                with open(self.data_file, 'r', encoding='utf-8') as f:
+                with self.data_file.open('r', encoding='utf-8') as f:
                     return json.load(f)
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 logger.error(f"加载数据文件失败: {e}")
@@ -90,16 +90,16 @@ class DataManager:
         Returns:
             创建的数据字典
         """
-        data_dir = os.path.dirname(self.data_file) or '.'
+        data_dir = self.data_file.parent
         
-        template_file = os.path.join(os.path.dirname(__file__), '..', 'template', 'default_gun_code.json')
+        template_file = Path(__file__).parent.parent / 'template' / 'default_gun_code.json'
         
         template_data = {"guns": {}}
         
         # 尝试从模板文件加载
-        if os.path.exists(template_file):
+        if template_file.exists():
             try:
-                with open(template_file, 'r', encoding='utf-8') as f:
+                with template_file.open('r', encoding='utf-8') as f:
                     template_data = json.load(f)
                 logger.info(f"从模板文件 {template_file} 创建数据文件")
             except (json.JSONDecodeError, FileNotFoundError) as e:
@@ -107,11 +107,12 @@ class DataManager:
         else:
             logger.info("模板文件不存在，将创建空数据文件")
         
-        os.makedirs(os.path.dirname(self.data_file) or '.', exist_ok=True)
+        # 确保目录存在
+        data_dir.mkdir(parents=True, exist_ok=True)
         
         # 保存数据到目标文件
         try:
-            with open(self.data_file, 'w', encoding='utf-8') as f:
+            with self.data_file.open('w', encoding='utf-8') as f:
                 json.dump(template_data, f, ensure_ascii=False, indent=4)
             logger.info(f"已创建数据文件: {self.data_file}")
         except Exception as e:
@@ -123,10 +124,11 @@ class DataManager:
         """
         保存数据到文件
         """
-        os.makedirs(os.path.dirname(self.data_file) or '.', exist_ok=True)
+        # 确保目录存在
+        self.data_file.parent.mkdir(parents=True, exist_ok=True)
         
         try:
-            with open(self.data_file, 'w', encoding='utf-8') as f:
+            with self.data_file.open('w', encoding='utf-8') as f:
                 json.dump(self.data, f, ensure_ascii=False, indent=4)
         except Exception as e:
             logger.error(f"保存数据失败: {e}")
@@ -436,8 +438,8 @@ class DataManager:
             是否创建成功
         """
         try:
-            if os.path.exists(self.data_file):
-                os.remove(self.data_file)
+            if self.data_file.exists():
+                self.data_file.unlink()
                 logger.info(f"已删除现有数据文件: {self.data_file}")
             
             self.data = self._create_from_template()
@@ -447,15 +449,14 @@ class DataManager:
             logger.error(f"从模板重新创建失败: {e}")
             return False
     
-    def get_template_path(self) -> str:
+    def get_template_path(self) -> Path:
         """
         获取模板文件路径
         
         Returns:
             模板文件路径
         """
-        data_dir = os.path.dirname(self.data_file) or '.'
-        return os.path.join(data_dir, "template", "default_gun_code.json")
+        return Path(__file__).parent.parent / 'template' / 'default_gun_code.json'
     
     def template_exists(self) -> bool:
         """
@@ -464,4 +465,4 @@ class DataManager:
         Returns:
             模板文件是否存在
         """
-        return os.path.exists(self.get_template_path())
+        return self.get_template_path().exists()

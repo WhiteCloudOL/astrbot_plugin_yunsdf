@@ -1,5 +1,5 @@
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
-from astrbot.api.star import Context, Star, register, StarTools
+from astrbot.api.star import Context, Star, StarTools
 from astrbot.api import logger, AstrBotConfig
 import astrbot.api.message_components as Comp
 from astrbot.api.message_components import Image
@@ -7,12 +7,13 @@ from pathlib import Path
 from playwright.async_api import async_playwright
 import asyncio
 import time
+import shlex
+from typing import List, Optional, Tuple
 
 from .data_manager import DataManager
 
-@register("yunsdf", "清蒸云鸭", "三角洲改枪码、每日密码等查询插件，支持自定义添加，JSON持久化", "1.0.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context,config: AstrBotConfig):
+    def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         self.data_path = StarTools.get_data_dir("yunsdf")
         self.bot_config = context.get_config()
@@ -196,7 +197,7 @@ class MyPlugin(Star):
                 async for result in self._delete_gun(event, arg1):
                     yield result
             case "添加代码":
-                async for result in self._add_code(event, arg1, arg2, arg3):
+                async for result in self._add_code_improved(event, arg1, arg2, arg3):
                     yield result
             case "删除代码":
                 async for result in self._delete_code(event, arg1, arg2, arg3):
@@ -217,31 +218,49 @@ class MyPlugin(Star):
                 messages.append(Comp.Plain("❌无效的子命令！使用 '/改枪码管理' 查看可用命令"))
                 yield event.chain_result(messages)
 
-    async def _add_code(self, event: AstrMessageEvent, gun_name: str, field_type_cn: str, args: str):
-        """添加代码 - 自动生成序号，使用中文类型"""
+    async def _add_code_improved(self, event: AstrMessageEvent, gun_name: str, field_type_cn: str, args: str):
+        """改进的参数解析：添加代码"""
         if not all([gun_name, field_type_cn, args]):
             yield event.plain_result("❌参数不足！格式: /改枪码管理 添加代码 <枪名> <烽火地带|全面战场> <代码> <描述> [价格]")
             return
         
         try:
-            args_list = args.split(' ', 2)
+            # 使用 shlex 分割参数，支持带空格的描述
+            args_list = shlex.split(args)
+            
             if len(args_list) < 2:
-                raise ValueError("参数不足")
+                raise ValueError("参数不足，需要至少提供代码和描述")
             
+            # 从后向前解析：最后一个可能是价格
             code = args_list[0]
-            description = args_list[1]
-            price = int(args_list[2]) if len(args_list) > 2 and field_type_cn == "烽火地带" else None
             
+            # 转换中文类型为英文
             if field_type_cn == "烽火地带":
                 field_type = "firezone"
+                # 烽火地带需要价格，检查是否有价格参数
+                if len(args_list) >= 3:
+                    # 尝试将最后一个参数解析为价格
+                    try:
+                        price = int(args_list[-1])
+                        description = ' '.join(args_list[1:-1])
+                    except ValueError:
+                        # 最后一个不是数字，说明没有提供价格
+                        price = None
+                        description = ' '.join(args_list[1:])
+                else:
+                    price = None
+                    description = args_list[1]
+                
+                if price is None:
+                    yield event.plain_result("❌烽火地带类型必须提供价格参数")
+                    return
+                    
             elif field_type_cn == "全面战场":
                 field_type = "battlefield"
+                price = None
+                description = ' '.join(args_list[1:])
             else:
                 yield event.plain_result("❌字段类型必须是 '烽火地带' 或 '全面战场'")
-                return
-            
-            if field_type == "firezone" and price is None:
-                yield event.plain_result("❌烽火地带类型必须提供价格参数")
                 return
             
             # 自动生成序号（获取当前最大序号+1）
@@ -368,11 +387,12 @@ class MyPlugin(Star):
         return None
 
     async def _get_daily_password_screenshot(self, attempt: int = 0) -> Path:
-        """使用 Playwright 获取每日密码截图"""
+        """使用 Playwright 获取每日密码截图 - 改进的等待机制"""
         screenshot_path = self.screenshot_dir / "daily_password.png"
         
         # 根据尝试次数调整超时时间
         timeout_multiplier = 1 + (attempt * 0.5)
+        timeout_ms = int(30000 * timeout_multiplier)
         
         async with async_playwright() as p:
             browser = None
@@ -385,7 +405,7 @@ class MyPlugin(Star):
                         '--disable-gpu',
                         '--lang=zh-CN'
                     ],
-                    timeout=int(30000 * timeout_multiplier)
+                    timeout=timeout_ms
                 )
                 
                 context = await browser.new_context(
@@ -396,23 +416,23 @@ class MyPlugin(Star):
                     ignore_https_errors=True,
                 )
                 
-                context.set_default_timeout(int(30000 * timeout_multiplier))
+                context.set_default_timeout(timeout_ms)
                 page = await context.new_page()
-                page.set_default_timeout(int(30000 * timeout_multiplier))
-                page.set_default_navigation_timeout(int(30000 * timeout_multiplier))
+                page.set_default_timeout(timeout_ms)
+                page.set_default_navigation_timeout(timeout_ms)
                 
                 # 导航到目标页面
                 logger.info("导航到目标页面...")
                 await page.goto(
                     'https://www.acgice.com/sjz/', 
-                    wait_until='domcontentloaded',
-                    timeout=int(30000 * timeout_multiplier)
+                    wait_until='networkidle',  # 使用更严格的等待条件
+                    timeout=timeout_ms
                 )
                 
-                # 等待页面稳定
-                await asyncio.sleep(2)
+                # 等待页面完全加载
+                await page.wait_for_load_state('networkidle')
                 
-                # 多种选择器尝试
+                # 多种选择器尝试，使用基于事件的等待
                 selectors_to_try = [
                     '.stats.bg-base-500',
                     '.text-center.stats',
@@ -424,13 +444,20 @@ class MyPlugin(Star):
                 for selector in selectors_to_try:
                     try:
                         logger.info(f"尝试选择器: {selector}")
+                        # 使用 wait_for_selector 等待元素出现
                         target_element = await page.wait_for_selector(
                             selector, 
-                            timeout=int(10000 * timeout_multiplier),
-                            state='attached'
+                            timeout=10000,
+                            state='visible'  # 确保元素可见
                         )
                         if target_element:
                             logger.info(f"成功找到元素: {selector}")
+                            
+                            # 等待元素稳定
+                            await page.wait_for_function(
+                                f"document.querySelector('{selector}').offsetHeight > 0",
+                                timeout=5000
+                            )
                             break
                     except Exception as e:
                         logger.warning(f"选择器 {selector} 失败: {e}")
@@ -438,25 +465,22 @@ class MyPlugin(Star):
                 
                 if not target_element:
                     logger.warning("未找到目标元素，尝试截图整个页面")
-                    await page.screenshot(path=str(screenshot_path), full_page=False)
+                    await page.screenshot(path=str(screenshot_path), full_page=True)
                     logger.info("已截图整个页面作为fallback")
                 else:
-                    await asyncio.sleep(1)
+                    # 确保元素在视图中
+                    await target_element.scroll_into_view_if_needed()
                     
-                    is_visible = await target_element.is_visible()
-                    bounding_box = await target_element.bounding_box()
+                    # 等待可能的动画完成
+                    await page.wait_for_timeout(500)
                     
-                    if not is_visible or not bounding_box:
-                        logger.warning("目标元素不可见或没有尺寸，尝试截图整个页面")
-                        await page.screenshot(path=str(screenshot_path), full_page=False)
-                    else:
-                        logger.info("截图目标元素...")
-                        await target_element.screenshot(
-                            path=str(screenshot_path),
-                            type='png',
-                            timeout=int(10000 * timeout_multiplier)
-                        )
-                        logger.info(f"截图保存到: {screenshot_path}")
+                    logger.info("截图目标元素...")
+                    await target_element.screenshot(
+                        path=str(screenshot_path),
+                        type='png',
+                        timeout=10000
+                    )
+                    logger.info(f"截图保存到: {screenshot_path}")
                 
                 # 验证截图文件
                 if screenshot_path.exists() and screenshot_path.stat().st_size > 0:
