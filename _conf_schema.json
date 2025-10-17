@@ -1,0 +1,9 @@
+{
+  "admins": {
+    "description": "管理员列表",
+    "type": "list",
+    "hint": "设置管理员(ID，如QQ为QQ号),为空则继承Bot管理员",
+    "default": [],
+    "obvious_hint": true
+  }
+}

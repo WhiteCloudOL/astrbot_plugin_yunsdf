@@ -1,6 +1,6 @@
-# Astrbot Plugin Guncode
+# Astrbot Plugin Yun's DeltaForce
 
-AstrBot Plugin for DeltaForce Guncode
+AstrBot Plugin for DeltaForce
 
 # 功能/Function  
 1. 默认自带改枪码  
@@ -9,7 +9,7 @@ AstrBot Plugin for DeltaForce Guncode
 # 安装/Install  
 
 ### 自动安装  
-Astrbot插件市场搜索 mcstatus 即可自动下载  
+Astrbot插件市场搜索 yunsdf 即可自动下载  
 此外，需要确保安装playwright
 默认情况下pip会自动下载playwright包，但是需要手动安装，请进入python虚拟环境，输入以下命令：  
 ```bash

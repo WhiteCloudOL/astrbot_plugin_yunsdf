@@ -2,21 +2,30 @@ from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register, StarTools
 from astrbot.api import logger, AstrBotConfig
 import astrbot.api.message_components as Comp
+from astrbot.api.message_components import Image
 from pathlib import Path
 from playwright.async_api import async_playwright
+import asyncio
+import time
 
 from .data_manager import DataManager
 
 @register("yunsdf", "清蒸云鸭", "三角洲改枪码、每日密码、交易行查询插件，支持自定义添加，JSON持久化", "1.0.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context):
+    def __init__(self, context: Context,config: AstrBotConfig):
         super().__init__(context)
         self.data_path = StarTools.get_data_dir("yunsdf")
         self.bot_config = context.get_config()
-        self.admin_list = self.bot_config.get("admins_id", [])
-        self.datamanager = DataManager(data_file=self.data_path/"gun_data.json")
+        bot_admins = self.bot_config.get("admins_id", [])
+        plugin_admins = config.get("admins", [])
         
-        # 用户临时数据存储
+        # 合并管理员列表
+        if not plugin_admins:
+            self.admin_list = bot_admins
+        else:
+            self.admin_list = list(set(bot_admins + plugin_admins))
+
+        self.datamanager = DataManager(data_file=self.data_path/"gun_data.json")
         self.user_temp_data = {}
         self.screenshot_dir = self.data_path / "screenshots"
         self.screenshot_dir.mkdir(exist_ok=True)
@@ -36,7 +45,6 @@ class MyPlugin(Star):
             yield event.chain_result(messages)
             return
         
-        # 搜索匹配的枪械
         found_guns = self.datamanager.search_guns(gun_name)
         gun_num = len(found_guns)
         
@@ -49,13 +57,11 @@ class MyPlugin(Star):
             return
         
         if gun_num == 1:
-            # 直接显示单个匹配结果
             gun_name = found_guns[0]
             async for result in self._display_gun_codes(event, gun_name):
                 yield result
             return
         
-        # 多个匹配结果，让用户选择
         if event.get_platform_name() in ("aiocqhttp", "webchat"):
             res = f"找到 {gun_num} 个匹配的枪械：\n"
             res += "| id | 枪名 |\n"
@@ -63,7 +69,6 @@ class MyPlugin(Star):
                 res += f"{i+1}. {found_guns[i]}\n"
             res += "\n请执行命令 /选择 id ，否则请输入 /取消"
             
-            # 存储临时数据
             self._set_user_temp_data(event.get_sender_id(), event.get_group_id(), found_guns)
             
             messages = []
@@ -97,7 +102,6 @@ class MyPlugin(Star):
         async for result in self._display_gun_codes(event, gun_name):
             yield result
         
-        # 清除临时数据
         self._clear_user_temp_data(user_id, group_id)
 
     @filter.command("取消")
@@ -124,10 +128,8 @@ class MyPlugin(Star):
             yield event.chain_result(messages)
             return
         
-        # 构建回复消息
         result = f"欢迎使用Yun's GunCode~\n🔫 枪械: {gun_name}\n\n"
         
-        # Firezone 数据 - 按价格升序排列
         firezone_codes = self.datamanager.get_gun_codes(gun_name, "firezone", sort_by_price=True)
         if firezone_codes:
             result += "🔥 烽火地带 改枪码:\n"
@@ -137,7 +139,7 @@ class MyPlugin(Star):
                 if "丐版" in data['description'] or "基础" in data['description']:
                     price_text = f"{price_text}丐版"
                 
-                # 按照新格式：枪名 描述: 枪名-烽火地带-代码
+                # 枪名 描述: 枪名-烽火地带-代码
                 code_line = f"{gun_name} {data['description']}: {gun_name}-烽火地带-{data['code']}"
                 result += f"  {code_line}\n"
             result += "\n"
@@ -149,7 +151,7 @@ class MyPlugin(Star):
         if battlefield_codes:
             result += "⚔️ 全面战场 改枪码:\n"
             for level, data in battlefield_codes:
-                # 按照新格式：枪名 描述: 枪名-全面战场-代码
+                # 枪名 描述: 枪名-全面战场-代码
                 code_line = f"{gun_name} {data['description']}: {gun_name}-全面战场-{data['code']}"
                 result += f"  {code_line}\n"
         else:
@@ -177,8 +179,8 @@ class MyPlugin(Star):
                 "🔧 Yun's改枪码管理命令:\n"
                 "• 添加枪械: /改枪码管理 添加枪械 <枪名>\n"
                 "• 删除枪械: /改枪码管理 删除枪械 <枪名>\n"
-                "• 添加代码: /改枪码管理 添加代码 <枪名> <firezone|battlefield> <等级> <代码> <描述> [价格]\n"
-                "• 删除代码: /改枪码管理 删除代码 <枪名> <firezone|battlefield> <等级>\n"
+                "• 添加代码: /改枪码管理 添加代码 <枪名> <烽火地带|全面战场> <代码> <描述> [价格]\n"
+                "• 删除代码: /改枪码管理 删除代码 <枪名> <烽火地带|全面战场> <序号>\n"
                 "• 查看枪械: /改枪码管理 查看枪械 [枪名]\n"
                 "• 枪械列表: /改枪码管理 枪械列表\n"
                 "• 搜索枪械: /改枪码管理 搜索 <关键词>"
@@ -215,34 +217,109 @@ class MyPlugin(Star):
                 messages.append(Comp.Plain("❌无效的子命令！使用 '/改枪码管理' 查看可用命令"))
                 yield event.chain_result(messages)
 
-    @filter.command("每日密码", alias=["dailycode", "密码"])
+    async def _add_code(self, event: AstrMessageEvent, gun_name: str, field_type_cn: str, args: str):
+        """添加代码 - 自动生成序号，使用中文类型"""
+        if not all([gun_name, field_type_cn, args]):
+            yield event.plain_result("❌参数不足！格式: /改枪码管理 添加代码 <枪名> <烽火地带|全面战场> <代码> <描述> [价格]")
+            return
+        
+        try:
+            args_list = args.split(' ', 2)
+            if len(args_list) < 2:
+                raise ValueError("参数不足")
+            
+            code = args_list[0]
+            description = args_list[1]
+            price = int(args_list[2]) if len(args_list) > 2 and field_type_cn == "烽火地带" else None
+            
+            if field_type_cn == "烽火地带":
+                field_type = "firezone"
+            elif field_type_cn == "全面战场":
+                field_type = "battlefield"
+            else:
+                yield event.plain_result("❌字段类型必须是 '烽火地带' 或 '全面战场'")
+                return
+            
+            if field_type == "firezone" and price is None:
+                yield event.plain_result("❌烽火地带类型必须提供价格参数")
+                return
+            
+            # 自动生成序号（获取当前最大序号+1）
+            gun_data = self.datamanager.get_gun(gun_name)
+            if not gun_data:
+                yield event.plain_result(f"❌枪械 '{gun_name}' 不存在，请先添加枪械")
+                return
+            
+            existing_codes = gun_data.get(field_type, {})
+            if existing_codes:
+                max_level = max(int(level) for level in existing_codes.keys())
+                level = max_level + 1
+            else:
+                level = 1
+            
+            if self.datamanager.add_field_data(gun_name, field_type, level, code, description, price):
+                code_line = f"{gun_name} {description}: {gun_name}-{field_type_cn}-{code}"
+                yield event.plain_result(f"✅成功添加代码 (序号{level}):\n{code_line}")
+            else:
+                yield event.plain_result(f"❌添加代码失败，请检查枪械名称和参数")
+                
+        except (ValueError, IndexError) as e:
+            logger.error(f"添加代码参数错误: {e}")
+            yield event.plain_result("❌参数格式错误！正确格式: /改枪码管理 添加代码 <枪名> <烽火地带|全面战场> <代码> <描述> [价格]")
+
+    async def _delete_code(self, event: AstrMessageEvent, gun_name: str, field_type_cn: str, level_str: str):
+        """删除代码 - 使用中文类型"""
+        if not all([gun_name, field_type_cn, level_str]):
+            yield event.plain_result("❌参数不足！格式: /改枪码管理 删除代码 <枪名> <烽火地带|全面战场> <序号>")
+            return
+        
+        try:
+            level = int(level_str)
+            
+            # 转换中文类型为英文
+            if field_type_cn == "烽火地带":
+                field_type = "firezone"
+            elif field_type_cn == "全面战场":
+                field_type = "battlefield"
+            else:
+                yield event.plain_result("❌字段类型必须是 '烽火地带' 或 '全面战场'")
+                return
+            
+            field_data = self.datamanager.get_field_data(gun_name, field_type, level)
+            if not field_data:
+                yield event.plain_result(f"❌要删除的代码不存在")
+                return
+            
+            if self.datamanager.delete_field_data(gun_name, field_type, level):
+                code_line = f"{gun_name} {field_data['description']}: {gun_name}-{field_type_cn}-{field_data['code']}"
+                yield event.plain_result(f"✅成功删除代码 (序号{level}):\n{code_line}")
+            else:
+                yield event.plain_result(f"❌删除代码失败，请检查枪械名称和序号")
+                
+        except ValueError:
+            yield event.plain_result("❌序号必须是数字")
+
+    @filter.command("每日密码", alias=["dailycode", "密码","今日密码"])
     async def daily_password(self, event: AstrMessageEvent):
         """获取三角洲行动每日密码"""
         messages = []
         
         try:
-            # 显示处理中消息
             if event.get_platform_name() == "aiocqhttp":
                 messages.append(Comp.At(qq=event.get_sender_id()))
-            messages.append(Comp.Plain("欢迎使用Yuns三角洲插件~"))
-            messages.append(Comp.Plain("🔄 正在从ACGICE网站获取每日密码，请稍候..."))
+            messages.append(Comp.Plain(" 欢迎使用Yuns三角洲插件~\n"))
+            messages.append(Comp.Plain("🔄 正在从ACGICE网站获取每日密码，请稍候...\n"))
             yield event.chain_result(messages)
-            messages = []  # 清空消息列表
+            messages = []
             
-            # 获取截图
-            screenshot_path = await self._get_daily_password_screenshot()
+            # 使用带重试的版本
+            screenshot_path = await self._get_daily_password_with_retry()
             
             if screenshot_path and screenshot_path.exists():
-                # 构建图片消息
                 if event.get_platform_name() == "aiocqhttp":
-                    # QQ平台使用Image组件
-                    from astrbot.api.message_components import Image
                     messages.append(Comp.At(qq=event.get_sender_id()))
-                    messages.append(Image(file=str(screenshot_path)))
-                    messages.append(Comp.Plain("🎯 三角洲行动 - 今日地图密码"))
-                else:
-                    messages.append(Comp.Plain("🎯 三角洲行动 - 今日地图密码"))
-                    messages.append(Comp.Image(file=str(screenshot_path)))
+                messages.append(Comp.Plain("🎯 今日地图密码"))
+                messages.append(Comp.Image(file=str(screenshot_path)))
                 yield event.chain_result(messages)
             else:
                 if event.get_platform_name() == "aiocqhttp":
@@ -258,93 +335,180 @@ class MyPlugin(Star):
             messages.append(Comp.Plain("❌ 获取每日密码时发生错误，请稍后重试"))
             yield event.chain_result(messages)
 
-    async def _get_daily_password_screenshot(self) -> Path:
-        """
-        使用 Playwright 获取每日密码截图
+    async def _get_daily_password_with_retry(self, max_retries: int = 3) -> Path:
+        """带重试机制的获取每日密码截图"""
+        cached_path = await self._check_screenshot_cache()
+        if cached_path:
+            return cached_path
         
-        Returns:
-            截图文件路径
-        """
+        last_exception = None
+        
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"尝试获取每日密码截图 (第 {attempt + 1}/{max_retries} 次)")
+                
+                screenshot_path = await self._get_daily_password_screenshot(attempt)
+                
+                if screenshot_path and screenshot_path.exists():
+                    logger.info(f"✅ 第 {attempt + 1} 次尝试成功")
+                    return screenshot_path
+                else:
+                    logger.warning(f"❌ 第 {attempt + 1} 次尝试失败: 截图文件未生成")
+                    
+            except Exception as e:
+                last_exception = e
+                logger.warning(f"❌ 第 {attempt + 1} 次尝试失败: {str(e)}")
+                
+                if attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 2
+                    logger.info(f"等待 {wait_time} 秒后重试...")
+                    await asyncio.sleep(wait_time)
+        
+        logger.error(f"所有 {max_retries} 次尝试均失败，最后错误: {last_exception}")
+        return None
+
+    async def _get_daily_password_screenshot(self, attempt: int = 0) -> Path:
+        """使用 Playwright 获取每日密码截图"""
         screenshot_path = self.screenshot_dir / "daily_password.png"
         
+        # 根据尝试次数调整超时时间
+        timeout_multiplier = 1 + (attempt * 0.5)
+        
         async with async_playwright() as p:
+            browser = None
             try:
-                # 启动浏览器，使用中文语言环境
                 browser = await p.chromium.launch(
                     headless=True,
-                    args=['--no-sandbox', '--disable-dev-shm-usage', '--lang=zh-CN']
+                    args=[
+                        '--no-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-gpu',
+                        '--lang=zh-CN'
+                    ],
+                    timeout=int(30000 * timeout_multiplier)
                 )
                 
-                # 创建上下文，设置中文语言和用户代理
                 context = await browser.new_context(
                     locale='zh-CN',
                     timezone_id='Asia/Shanghai',
                     viewport={'width': 1200, 'height': 800},
-                    user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                    user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                    ignore_https_errors=True,
                 )
                 
-                # 创建页面
+                context.set_default_timeout(int(30000 * timeout_multiplier))
                 page = await context.new_page()
-                
-                # 设置超时时间
-                page.set_default_timeout(30000)
+                page.set_default_timeout(int(30000 * timeout_multiplier))
+                page.set_default_navigation_timeout(int(30000 * timeout_multiplier))
                 
                 # 导航到目标页面
-                logger.info("正在导航到目标页面...")
-                await page.goto('https://www.acgice.com/sjz/', wait_until='networkidle')
+                logger.info("导航到目标页面...")
+                await page.goto(
+                    'https://www.acgice.com/sjz/', 
+                    wait_until='domcontentloaded',
+                    timeout=int(30000 * timeout_multiplier)
+                )
                 
-                # 等待页面加载完成
-                await page.wait_for_timeout(3000)
+                # 等待页面稳定
+                await asyncio.sleep(2)
                 
-                # 等待目标元素加载
-                logger.info("等待目标元素加载...")
-                await page.wait_for_selector('.stats.bg-base-500', timeout=15000)
+                # 多种选择器尝试
+                selectors_to_try = [
+                    '.stats.bg-base-500',
+                    '.text-center.stats',
+                    '.stats',
+                    'div[class*="stats"]',
+                ]
                 
-                # 定位到指定的元素
-                target_element = await page.query_selector('.stats.bg-base-500')
+                target_element = None
+                for selector in selectors_to_try:
+                    try:
+                        logger.info(f"尝试选择器: {selector}")
+                        target_element = await page.wait_for_selector(
+                            selector, 
+                            timeout=int(10000 * timeout_multiplier),
+                            state='attached'
+                        )
+                        if target_element:
+                            logger.info(f"成功找到元素: {selector}")
+                            break
+                    except Exception as e:
+                        logger.warning(f"选择器 {selector} 失败: {e}")
+                        continue
                 
-                if target_element:
-                    # 截图指定元素
-                    logger.info("正在截图...")
-                    await target_element.screenshot(path=str(screenshot_path))
-                    logger.info(f"截图保存到: {screenshot_path}")
+                if not target_element:
+                    logger.warning("未找到目标元素，尝试截图整个页面")
+                    await page.screenshot(path=str(screenshot_path), full_page=False)
+                    logger.info("已截图整个页面作为fallback")
                 else:
-                    logger.error("未找到目标元素")
-                    screenshot_path = None
+                    await asyncio.sleep(1)
+                    
+                    is_visible = await target_element.is_visible()
+                    bounding_box = await target_element.bounding_box()
+                    
+                    if not is_visible or not bounding_box:
+                        logger.warning("目标元素不可见或没有尺寸，尝试截图整个页面")
+                        await page.screenshot(path=str(screenshot_path), full_page=False)
+                    else:
+                        logger.info("截图目标元素...")
+                        await target_element.screenshot(
+                            path=str(screenshot_path),
+                            type='png',
+                            timeout=int(10000 * timeout_multiplier)
+                        )
+                        logger.info(f"截图保存到: {screenshot_path}")
                 
-                # 关闭浏览器
-                await browser.close()
-                
-                return screenshot_path
+                # 验证截图文件
+                if screenshot_path.exists() and screenshot_path.stat().st_size > 0:
+                    logger.info("截图验证成功")
+                    return screenshot_path
+                else:
+                    logger.error("截图文件为空或不存在")
+                    return None
                 
             except Exception as e:
                 logger.error(f"截图过程中发生错误: {e}")
-                try:
-                    await browser.close()
-                except:
-                    pass
-                return None
+                if screenshot_path.exists():
+                    try:
+                        screenshot_path.unlink()
+                    except:
+                        pass
+                raise e
+                
+            finally:
+                if browser:
+                    try:
+                        await browser.close()
+                        logger.info("浏览器已关闭")
+                    except Exception as e:
+                        logger.warning(f"关闭浏览器时发生错误: {e}")
 
-    # 可选：添加缓存机制，避免频繁请求
-    async def _get_daily_password_with_cache(self) -> Path:
-        """
-        带缓存的获取每日密码截图
-        
-        Returns:
-            截图文件路径
-        """
+    async def _check_screenshot_cache(self) -> Path:
+        """检查截图缓存是否有效"""
         screenshot_path = self.screenshot_dir / "daily_password.png"
         
-        # 检查缓存是否有效（1小时内）
-        if screenshot_path.exists():
-            import time
-            file_age = time.time() - screenshot_path.stat().st_mtime
-            if file_age < 3600:  # 1小时缓存
-                logger.info("使用缓存的截图")
-                return screenshot_path
+        if not screenshot_path.exists():
+            return None
         
-        # 重新获取截图
-        return await self._get_daily_password_screenshot()
+        try:
+            file_size = screenshot_path.stat().st_size
+            if file_size == 0:
+                logger.warning("缓存文件大小为0，重新获取")
+                screenshot_path.unlink()
+                return None
+            
+            file_age = time.time() - screenshot_path.stat().st_mtime
+            if file_age < 1800:  # 30分钟缓存
+                logger.info("使用有效的缓存截图")
+                return screenshot_path
+            else:
+                logger.info("缓存已过期，重新获取")
+                screenshot_path.unlink()
+                return None
+                
+        except Exception as e:
+            logger.warning(f"检查缓存时发生错误: {e}")
+            return None
 
     async def _add_gun(self, event: AstrMessageEvent, gun_name: str):
         """添加枪械"""
@@ -368,78 +532,12 @@ class MyPlugin(Star):
         else:
             yield event.plain_result(f"❌删除枪械失败: {gun_name} 不存在")
 
-    async def _add_code(self, event: AstrMessageEvent, gun_name: str, field_type: str, args: str):
-        """添加代码"""
-        if not all([gun_name, field_type, args]):
-            yield event.plain_result("❌参数不足！格式: /改枪码管理 添加代码 <枪名> <firezone|battlefield> <等级> <代码> <描述> [价格]")
-            return
-        
-        try:
-            args_list = args.split(' ', 3)  # 最多分割4部分
-            if len(args_list) < 3:
-                raise ValueError("参数不足")
-            
-            level = int(args_list[0])
-            code = args_list[1]
-            description = args_list[2]
-            price = int(args_list[3]) if len(args_list) > 3 and field_type == "firezone" else None
-            
-            if field_type not in ["firezone", "battlefield"]:
-                yield event.plain_result("❌字段类型必须是 'firezone' 或 'battlefield'")
-                return
-            
-            # 对于firezone必须提供价格
-            if field_type == "firezone" and price is None:
-                yield event.plain_result("❌firezone类型必须提供价格参数")
-                return
-            
-            if self.datamanager.add_field_data(gun_name, field_type, level, code, description, price):
-                # 显示添加后的完整格式
-                field_name = "烽火地带" if field_type == "firezone" else "全面战场"
-                code_line = f"{gun_name} {description}: {gun_name}-{field_name}-{code}"
-                yield event.plain_result(f"✅成功添加代码:\n{code_line}")
-            else:
-                yield event.plain_result(f"❌添加代码失败，请检查枪械名称和参数")
-                
-        except (ValueError, IndexError) as e:
-            yield event.plain_result("❌参数格式错误！正确格式: /改枪码管理 添加代码 <枪名> <firezone|battlefield> <等级> <代码> <描述> [价格]")
-
-    async def _delete_code(self, event: AstrMessageEvent, gun_name: str, field_type: str, level_str: str):
-        """删除代码"""
-        if not all([gun_name, field_type, level_str]):
-            yield event.plain_result("❌参数不足！格式: /改枪码管理 删除代码 <枪名> <firezone|battlefield> <等级>")
-            return
-        
-        try:
-            level = int(level_str)
-            if field_type not in ["firezone", "battlefield"]:
-                yield event.plain_result("❌字段类型必须是 'firezone' 或 'battlefield'")
-                return
-            
-            # 先获取要删除的数据信息
-            field_data = self.datamanager.get_field_data(gun_name, field_type, level)
-            if not field_data:
-                yield event.plain_result(f"❌要删除的代码不存在")
-                return
-            
-            if self.datamanager.delete_field_data(gun_name, field_type, level):
-                field_name = "烽火地带" if field_type == "firezone" else "全面战场"
-                code_line = f"{gun_name} {field_data['description']}: {gun_name}-{field_name}-{field_data['code']}"
-                yield event.plain_result(f"✅成功删除代码:\n{code_line}")
-            else:
-                yield event.plain_result(f"❌删除代码失败，请检查枪械名称和等级")
-                
-        except ValueError:
-            yield event.plain_result("❌等级必须是数字")
-
     async def _view_gun(self, event: AstrMessageEvent, gun_name: str = None):
         """查看枪械详情"""
         if gun_name:
-            # 查看特定枪械
             async for result in self._display_gun_codes(event, gun_name):
                 yield result
         else:
-            # 查看所有枪械列表
             async for result in self._list_guns(event):
                 yield result
 
@@ -490,15 +588,14 @@ class MyPlugin(Star):
             "• /改枪码管理 - 显示管理命令帮助\n"
             "• /改枪码管理 添加枪械 <枪名>\n"
             "• /改枪码管理 删除枪械 <枪名>\n"
-            "• /改枪码管理 添加代码 <枪名> <firezone|battlefield> <等级> <代码> <描述> [价格]\n"
-            "• /改枪码管理 删除代码 <枪名> <firezone|battlefield> <等级>\n"
+            "• /改枪码管理 添加代码 <枪名> <烽火地带|全面战场> <代码> <描述> [价格]\n"
+            "• /改枪码管理 删除代码 <枪名> <烽火地带|全面战场> <序号>\n"
             "• /改枪码管理 查看枪械 [枪名]\n"
             "• /改枪码管理 枪械列表\n"
             "• /改枪码管理 搜索 <关键词>"
         )
         yield event.plain_result(help_text)
 
-    # 用户临时数据管理方法
     def _set_user_temp_data(self, user_id: str, group_id: str, data):
         """设置用户临时数据"""
         key = f"{user_id}_{group_id}"
@@ -518,7 +615,6 @@ class MyPlugin(Star):
     async def terminate(self):
         """插件销毁"""
         self.user_temp_data.clear()
-        import time
         current_time = time.time()
         for file in self.screenshot_dir.glob("*.png"):
             if current_time - file.stat().st_mtime > 86400:

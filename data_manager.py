@@ -57,7 +57,6 @@ class DataManager:
         """
         self.data_file = data_file
         self.data = self._load_data()
-        # 确保数据结构正确
         self._ensure_data_structure()
     
     def _ensure_data_structure(self):
@@ -91,11 +90,9 @@ class DataManager:
         Returns:
             创建的数据字典
         """
-        # 获取数据文件所在目录
         data_dir = os.path.dirname(self.data_file) or '.'
         
-        # 模板文件路径
-        template_file = os.path.join(data_dir, "template", "default_gun_code.json")
+        template_file = os.path.join(os.path.dirname(__file__), '..', 'template', 'default_gun_code.json')
         
         template_data = {"guns": {}}
         
@@ -110,7 +107,6 @@ class DataManager:
         else:
             logger.info("模板文件不存在，将创建空数据文件")
         
-        # 确保目录存在
         os.makedirs(os.path.dirname(self.data_file) or '.', exist_ok=True)
         
         # 保存数据到目标文件
@@ -127,7 +123,6 @@ class DataManager:
         """
         保存数据到文件
         """
-        # 确保目录存在
         os.makedirs(os.path.dirname(self.data_file) or '.', exist_ok=True)
         
         try:
@@ -137,7 +132,6 @@ class DataManager:
             logger.error(f"保存数据失败: {e}")
             raise
 
-    # 新增功能：根据枪名获取firezone或battlefield的guncode
     def get_gun_codes(self, gun_name: str, field_type: str, sort_by_price: bool = False) -> List[Tuple[int, Dict]]:
         """
         根据枪名获取firezone或battlefield的guncode
@@ -160,7 +154,6 @@ class DataManager:
             logger.info(f"枪械 {gun_name} 的 {field_type} 字段没有数据")
             return []
         
-        # 将数据转换为列表
         result = [(int(level), data) for level, data in field_data.items()]
         
         # 如果是firezone且需要按价格排序
@@ -168,7 +161,6 @@ class DataManager:
             result.sort(key=lambda x: x[1].get("price", 0))
             logger.info(f"已按价格排序获取 {gun_name} 的 {field_type} 代码")
         else:
-            # 默认按等级排序
             result.sort(key=lambda x: x[0])
             logger.info(f"已按等级排序获取 {gun_name} 的 {field_type} 代码")
         
@@ -189,7 +181,6 @@ class DataManager:
         codes_with_level = self.get_gun_codes(gun_name, field_type, sort_by_price)
         return [data for level, data in codes_with_level]
 
-    # 修改原有的枪械管理方法
     def add_gun(self, gun_name: str) -> bool:
         """
         添加枪械
@@ -445,12 +436,10 @@ class DataManager:
             是否创建成功
         """
         try:
-            # 删除现有数据文件
             if os.path.exists(self.data_file):
                 os.remove(self.data_file)
                 logger.info(f"已删除现有数据文件: {self.data_file}")
             
-            # 从模板重新创建
             self.data = self._create_from_template()
             logger.info("从模板重新创建数据文件成功")
             return True
