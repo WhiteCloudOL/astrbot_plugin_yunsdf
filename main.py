@@ -77,6 +77,11 @@ class yunsdf(Star):
                 messages.append(Comp.At(qq=event.get_sender_id()))
             messages.append(Comp.Plain(res))
             yield event.chain_result(messages)
+        else:
+            gun_name = found_guns[0]
+            async for result in self._display_gun_codes(event, gun_name):
+                yield result
+            yield event.chain_result(messages)
 
     @filter.command("选择")
     async def select_gun(self, event: AstrMessageEvent, choose_id: int):
