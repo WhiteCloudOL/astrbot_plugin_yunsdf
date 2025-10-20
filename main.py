@@ -12,7 +12,7 @@ from typing import List, Optional, Tuple
 
 from .data_manager import DataManager
 
-class MyPlugin(Star):
+class yunsdf(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         self.data_path = StarTools.get_data_dir("yunsdf")
@@ -263,7 +263,6 @@ class MyPlugin(Star):
                 yield event.plain_result("❌字段类型必须是 '烽火地带' 或 '全面战场'")
                 return
             
-            # 自动生成序号（获取当前最大序号+1）
             gun_data = self.datamanager.get_gun(gun_name)
             if not gun_data:
                 yield event.plain_result(f"❌枪械 '{gun_name}' 不存在，请先添加枪械")
